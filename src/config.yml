@@ -1,0 +1,13 @@
+Arena:
+      SelectedKit: 1st
+      Locations:
+        - UHC:0:0:0
+      Kits:
+           1st:
+             Name: "TEST"
+             Icon: NETHERITE_SWORD
+             Desc:
+               - "LORE"
+             Items:
+               - NETHERITE_SWORD 1 DURABILITY:3 SHARPNESS:5 name:TEST lore:Lore_1|Lore_2
+               - NETHERITE_AXE 1 DURABILITY:3 SHARPNESS:5 name:TEST lore:Lore_1|Lore_2
