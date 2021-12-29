@@ -1,11 +1,11 @@
 package xtr.uhc.Enums;
 
 public enum PlayerState {
-    INLOBBY,
+    LOBBY,
     TELEPORTING,
     TELEPORTED,
-    INGAME,
-    INARENA,
+    GAME,
+    ARENA,
     DEAD, //Not spectating yet.... Maybe spectate with vip perms or smt
     SPECTATING,
     MODERATING,

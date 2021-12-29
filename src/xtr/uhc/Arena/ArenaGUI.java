@@ -3,10 +3,12 @@ package xtr.uhc.Arena;
 import com.samjakob.spigui.SGMenu;
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -19,17 +21,17 @@ import java.util.Map;
 
 public class ArenaGUI {
 
-    private final static Core core = Core.instance;
-    private final static Utilities util = Core.util;
-    private ArenaData adata = Arena.adata;
+    private  Core core = Core.instance;
+    private Utilities util = core.getUtil();
+
 
     protected void arenaGUI(Player player) {
-        SGMenu arenaSettings = core.gui.create("&6 Arena Settings", 1);
-        SGButton kitsButton = new SGButton(new com.samjakob.spigui.item.ItemBuilder(Material.DIAMOND_CHESTPLATE).build()).withListener(
+        SGMenu arenaSettings = core.getGUI().create("&6 Arena Settings", 1);
+        SGButton kitsButton = new SGButton(new ItemBuilder(Material.DIAMOND_CHESTPLATE).build()).withListener(
                 (InventoryClickEvent e) -> {
-                    arenaKits((Player) e.getWhoClicked());
+                    arenaKits((Player)e.getWhoClicked());
                 });
-        SGButton locationsButton = new SGButton(new com.samjakob.spigui.item.ItemBuilder(Material.OAK_SIGN).build()).withListener(
+        SGButton locationsButton = new SGButton(new ItemBuilder(Material.OAK_SIGN).build()).withListener(
                 (InventoryClickEvent e) -> {
                     arenaLocations((Player) e.getWhoClicked());
                 });
@@ -40,9 +42,11 @@ public class ArenaGUI {
     }
 
     protected void arenaKits(Player p) {
-        SGMenu arenaKits = core.gui.create("&6 Arena Locations", 5);
-        for (Map.Entry<Object, ArrayList<ItemStack>> k : adata.kits.entrySet()) {
+        SGMenu arenaKits = core.getGUI().create("&6 Arena Locations", 5);
+        for (Map.Entry<Object, ArrayList<ItemStack>> k : ArenaData.kits.entrySet()) {
+            Bukkit.getConsoleSender().sendMessage(k.getKey().toString());
             Material material = Material.getMaterial(core.getConfig().getString("Arena.Kits." + k.getKey() + ".Icon"));
+            /**1st Check*/Bukkit.getConsoleSender().sendMessage(material.toString());
             ItemStack item = new ItemStack(material);
             ItemMeta itemMeta = item.getItemMeta();
             ArrayList<String> lore = new ArrayList<>();
@@ -51,12 +55,13 @@ public class ArenaGUI {
             }
             itemMeta.setLore(lore);
             itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                    core.getConfig().getString("Arena.Kits." + k.getKey() + ".Name")));
+                    core.getConfig().get("Arena.Kits." + k.getKey() + ".Name").toString()));
             item.setItemMeta(itemMeta);
-            SGButton kit = new SGButton(new com.samjakob.spigui.item.ItemBuilder(item).build()).withListener((InventoryClickEvent e) -> {
+            /**2nd Check*/Bukkit.getConsoleSender().sendMessage(item.toString());
+            SGButton kit = new SGButton(new ItemBuilder(item).build()).withListener((InventoryClickEvent e) -> {
                 switch (e.getClick()) {
                     case MIDDLE -> {
-                        SGMenu kits = core.gui.create(k.getKey() + " Kit Preview", 4);
+                        SGMenu kits = core.getGUI().create(k.getKey() + " Kit Preview", 4);
                         for (ItemStack v : k.getValue()) {
                             SGButton button = new SGButton(new ItemBuilder(v).build());
                             kits.addButton(button);
@@ -71,8 +76,8 @@ public class ArenaGUI {
     }
 
     protected void arenaLocations(Player p) {
-        SGMenu arenaLocations = core.gui.create("&6 Arena Locations", 5);
-        for (Location loc : adata.getLocations()) {
+        SGMenu arenaLocations = core.getGUI().create("&6 Arena Locations", 5);
+        for (Location loc : ArenaData.locations) {
             Material material = loc.getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY() - 1, loc.getBlockZ()).getType();
             if (material.isAir() || !material.isOccluding()) {
                 material = Material.BARRIER;
@@ -85,14 +90,19 @@ public class ArenaGUI {
             itemMeta.setLore(lore);
             item.setItemMeta(itemMeta);
             SGButton location = new SGButton(
-                    new com.samjakob.spigui.item.ItemBuilder(item).build())
+                    new ItemBuilder(item).build())
                     .withListener((InventoryClickEvent e) -> {
-                        List<String> list = core.getConfig().getStringList("Arena.Locations");
-                        adata.getLocations().remove(loc);
-                        list.remove(util.locationToString(loc));
-                        core.getConfig().set("Arena.Locations", list);
-                        core.saveConfig();
-                        arenaLocations((Player) e.getWhoClicked());
+                       if (e.getClick().equals(ClickType.LEFT) || e.getClick().equals(ClickType.RIGHT)) {
+                           List<String> list = core.getConfig().getStringList("Arena.Locations");
+                           ArenaData.locations.remove(loc);
+                           list.remove(util.locationToString(loc));
+                           core.getConfig().set("Arena.Locations", list);
+                           core.saveConfig();
+                           arenaLocations((Player) e.getWhoClicked());
+                       }else if (e.getClick().equals(ClickType.MIDDLE)) {
+                           Location lc = Bukkit.getWorld(loc.getWorld().getUID()).getBlockAt(loc.getBlockX(),loc.getBlockY() + 1,loc.getBlockZ()).getLocation();
+                            e.getWhoClicked().teleport(lc);
+                        }
                     });
             arenaLocations.addButton(location);
         }
