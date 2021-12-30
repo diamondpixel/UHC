@@ -1,6 +1,7 @@
 package xtr.uhc.Manager;
 
 import xtr.uhc.Enums.PlayerState;
+
 import java.util.UUID;
 
 public class UHCPlayer {
@@ -16,7 +17,7 @@ public class UHCPlayer {
         return state;
     }
 
-    public void setState(PlayerState state){
+    public void setState(PlayerState state) {
         this.state = state;
     }
 

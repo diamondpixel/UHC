@@ -18,7 +18,7 @@ public class GenericListeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         UHCPlayer player = new UHCPlayer(event.getPlayer().getUniqueId());
-        uhc.getPlayers().put(event.getPlayer().getUniqueId(),player);
+        uhc.getPlayers().put(event.getPlayer().getUniqueId(), player);
     }
 
     @EventHandler
@@ -36,7 +36,7 @@ public class GenericListeners implements Listener {
     private void onTeleport(PlayerTeleportEvent e) {
         if (e.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)) {
             e.setCancelled(true);
-            e.getPlayer().teleport(uhc.uhc_loc);
+            e.getPlayer().teleport(uhc.getUHCCenter());
         }
     }
 }

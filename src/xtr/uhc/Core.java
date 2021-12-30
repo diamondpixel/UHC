@@ -12,6 +12,7 @@ import xtr.uhc.Listeners.GenericListeners;
 import xtr.uhc.Manager.UHC;
 import xtr.uhc.Manager.UHCPlayer;
 import xtr.uhc.Util.Utilities;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,30 +25,26 @@ public final class Core extends JavaPlugin implements CommandExecutor {
 
     private SpiGUI gui;
 
-    public SpiGUI getGUI(){
+    public SpiGUI getGUI() {
         return gui;
     }
 
     private Utilities util;
 
-    public Utilities getUtil(){
+    public Utilities getUtil() {
         return util;
     }
 
     private static UHC uhc;
 
-    public UHC getUHC(){
+    public UHC getUHC() {
         return uhc;
     }
+
     private ArenaGUI agui;
 
-    public ArenaGUI getAgui(){
+    public ArenaGUI getAgui() {
         return agui;
-    }
-    private ArenaData Adata;
-
-    public ArenaData getAdata(){
-        return Adata;
     }
 
 
@@ -60,10 +57,8 @@ public final class Core extends JavaPlugin implements CommandExecutor {
         util = new Utilities();
         gui = new SpiGUI(this);
         uhc = new UHC();
-        Adata = new ArenaData();
+        new ArenaData();
         agui = new ArenaGUI();
-
-        Adata.load();
 
         getCommand("arena").setExecutor(new Arena());
         getCommand("arena").setTabCompleter(new Arena());
@@ -73,7 +68,7 @@ public final class Core extends JavaPlugin implements CommandExecutor {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             UHCPlayer p = new UHCPlayer(player.getUniqueId());
-            uhc.getPlayers().put(player.getUniqueId(),p);
+            uhc.getPlayers().put(player.getUniqueId(), p);
         }
         saveConfig();
     }
@@ -83,36 +78,39 @@ public final class Core extends JavaPlugin implements CommandExecutor {
         instance = null;
     }
 
-    private void createConfig(){
-       if (!Files.exists(Path.of(this.getDataFolder() + "/config.yml"))) {
-           File file = new File(this.getDataFolder() + "/config.yml");
-         try {
-             file.getParentFile().mkdirs();
-             file.createNewFile();
-             getConfig().addDefault("Worlds.Lobby.World","UHC");
-             getConfig().addDefault("Worlds.Lobby.Spawn", "UHC:48:180:-173");
-             getConfig().addDefault("Worlds.UHC", "UHC");
-             getConfig().addDefault("Arena.Kits.Test.Name", "Test");
-             getConfig().addDefault("Arena.Kits.Test.Icon", "DIAMOND_SWORD");
-             getConfig().addDefault("Arena.Kits.Test.Desc", "Lore");
-             getConfig().addDefault("Arena.Kits.Test.Items", "DIAMOND_SWORD 1");
-             getConfig().addDefault("Arena.World","UHC");
-             getConfig().addDefault("Arena.Max.X",0);
-             getConfig().addDefault("Arena.Max.Y",0);
-             getConfig().addDefault("Arena.Max.Z",0);
-             getConfig().addDefault("Arena.Min.X",0);
-             getConfig().addDefault("Arena.Min.Y",0);
-             getConfig().addDefault("Arena.Min.Z",0);
-             getConfig().addDefault("Arena.Locations", "[]");
-             getConfig().addDefault("Arena.SelectedKit","Test");
-             getConfig().addDefault("Arena.Kits.Test.Name", "Test");
-             getConfig().addDefault("Arena.Kits.Test.Icon", "DIAMOND_SWORD");
-             getConfig().addDefault("Arena.Kits.Test.Desc", "LORE");
-             getConfig().addDefault("Arena.Kits.Test.Items", "DIAMOND_SWORD 1 DURABILITY:3 SHARPNESS:5 name:TEST lore:Lore_1|Lore_2");
-             getConfig().options().copyDefaults(true);
-             saveConfig();
-         }catch (IOException e) {e.printStackTrace();}
-       }return;
+    private void createConfig() {
+        if (!Files.exists(Path.of(this.getDataFolder() + "/config.yml"))) {
+            File file = new File(this.getDataFolder() + "/config.yml");
+            try {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+                getConfig().addDefault("Worlds.Lobby.World", "UHC");
+                getConfig().addDefault("Worlds.Lobby.Spawn", "UHC:48:180:-173");
+                getConfig().addDefault("Worlds.UHC", "UHC");
+                getConfig().addDefault("Arena.Kits.Test.Name", "Test");
+                getConfig().addDefault("Arena.Kits.Test.Icon", "DIAMOND_SWORD");
+                getConfig().addDefault("Arena.Kits.Test.Desc", "Lore");
+                getConfig().addDefault("Arena.Kits.Test.Items", "DIAMOND_SWORD 1");
+                getConfig().addDefault("Arena.World", "UHC");
+                getConfig().addDefault("Arena.Max.X", 0);
+                getConfig().addDefault("Arena.Max.Y", 0);
+                getConfig().addDefault("Arena.Max.Z", 0);
+                getConfig().addDefault("Arena.Min.X", 0);
+                getConfig().addDefault("Arena.Min.Y", 0);
+                getConfig().addDefault("Arena.Min.Z", 0);
+                getConfig().addDefault("Arena.Locations", "[]");
+                getConfig().addDefault("Arena.SelectedKit", "Test");
+                getConfig().addDefault("Arena.Kits.Test.Name", "Test");
+                getConfig().addDefault("Arena.Kits.Test.Icon", "DIAMOND_SWORD");
+                getConfig().addDefault("Arena.Kits.Test.Desc", "LORE");
+                getConfig().addDefault("Arena.Kits.Test.Items", "DIAMOND_SWORD 1 DURABILITY:3 SHARPNESS:5 name:TEST lore:Lore_1|Lore_2");
+                getConfig().options().copyDefaults(true);
+                saveConfig();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return;
 
     }
 }
